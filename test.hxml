@@ -1,0 +1,16 @@
+-lib tink_unittest
+-cp src
+-main RunTests
+--each
+-hl test.hl
+--next
+-python test.py
+--next
+-neko test.n
+# --next
+# -lib hxssl
+# --interp
+# --next
+# --interp
+# --next
+# -java java/bin
