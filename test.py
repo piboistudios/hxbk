@@ -737,7 +737,7 @@ class haxe_io_Input:
     _hx_class_name = "haxe.io.Input"
     __slots__ = ("bigEndian",)
     _hx_fields = ["bigEndian"]
-    _hx_methods = ["readByte", "readBytes", "set_bigEndian", "read", "readInt16"]
+    _hx_methods = ["readByte", "readBytes", "set_bigEndian", "read", "readInt16", "readUInt16"]
 
     def readByte(self):
         raise _HxException("Not implemented")
@@ -782,6 +782,14 @@ class haxe_io_Input:
         if (((n & 32768)) != 0):
             return (n - 65536)
         return n
+
+    def readUInt16(self):
+        ch1 = self.readByte()
+        ch2 = self.readByte()
+        if self.bigEndian:
+            return (ch2 | ((ch1 << 8)))
+        else:
+            return (ch1 | ((ch2 << 8)))
 
     @staticmethod
     def _hx_empty_init(_hx_o):
@@ -843,7 +851,7 @@ _hx_classes["python.io.NativeInput"] = python_io_NativeInput
 class python_io_IInput:
     _hx_class_name = "python.io.IInput"
     __slots__ = ()
-    _hx_methods = ["set_bigEndian", "readByte", "readBytes", "close", "read", "readInt16"]
+    _hx_methods = ["set_bigEndian", "readByte", "readBytes", "close", "read", "readInt16", "readUInt16"]
 python_io_IInput._hx_class = python_io_IInput
 _hx_classes["python.io.IInput"] = python_io_IInput
 
@@ -909,7 +917,7 @@ class sys_io_FileInput(haxe_io_Input):
     _hx_class_name = "sys.io.FileInput"
     __slots__ = ("impl",)
     _hx_fields = ["impl"]
-    _hx_methods = ["set_bigEndian", "seek", "readByte", "readBytes", "close", "read", "readInt16"]
+    _hx_methods = ["set_bigEndian", "seek", "readByte", "readBytes", "close", "read", "readInt16", "readUInt16"]
     _hx_statics = []
     _hx_interfaces = []
     _hx_super = haxe_io_Input
@@ -939,6 +947,9 @@ class sys_io_FileInput(haxe_io_Input):
 
     def readInt16(self):
         return self.impl.readInt16()
+
+    def readUInt16(self):
+        return self.impl.readUInt16()
 
     @staticmethod
     def _hx_empty_init(_hx_o):
@@ -1884,7 +1895,16 @@ _hx_classes["IntIterator"] = IntIterator
 class Lambda:
     _hx_class_name = "Lambda"
     __slots__ = ()
-    _hx_statics = ["exists", "iter", "filter", "count"]
+    _hx_statics = ["array", "exists", "iter", "filter", "count"]
+
+    @staticmethod
+    def array(it):
+        a = list()
+        i = HxOverrides.iterator(it)
+        while i.hasNext():
+            i1 = i.next()
+            a.append(i1)
+        return a
 
     @staticmethod
     def exists(it,f):
@@ -1947,7 +1967,7 @@ _hx_classes["RunTests"] = RunTests
 class TestPage:
     _hx_class_name = "TestPage"
     __slots__ = ()
-    _hx_methods = ["test_no_engine", "test_write", "test_book_write", "test_insert", "test_random", "test_dump"]
+    _hx_methods = ["test_no_engine", "test_write", "test_book_write", "test_insert", "test_random", "test_dump", "test_storage_plan", "test_compression"]
 
     def __init__(self):
         pass
@@ -1961,7 +1981,7 @@ class TestPage:
                 e = _hx_e1
                 lh = (e.code == 500)
                 rh = (e.message == "Engine must be initialized before beginning operation.")
-                data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh and rh)),((((((("e.code == InternalError && e.message == hxbk.Messages.NotInitialized" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "&&") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 31, 'className': "TestPage", 'methodName': "test_no_engine"})))
+                data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh and rh)),((((((("e.code == InternalError && e.message == hxbk.Messages.NotInitialized" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "&&") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 32, 'className': "TestPage", 'methodName': "test_no_engine"})))
                 tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,data)
                 tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,tink_streams_Yield.End)
             else:
@@ -1976,7 +1996,7 @@ class TestPage:
                 return hxbk_storage_Record(_hx_AnonObject({'name': "test"}))
             page_access = list(map(_hx_local_0,list("abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")))
             page_access1 = page.create(page_access)
-            data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool(page_access1),"page_access",_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 44, 'className': "TestPage", 'methodName': "test_write"})))
+            data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool(page_access1),"page_access",_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 45, 'className': "TestPage", 'methodName': "test_write"})))
             tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,data)
             def _hx_local_4():
                 def _hx_local_3():
@@ -1986,7 +2006,7 @@ class TestPage:
                         def _hx_local_1(page1):
                             lh = page1.get_bytes().toString()
                             rh = inMemory
-                            data1 = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh == rh)),((((((("page.bytes.toString() == inMemory" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "==") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 48, 'className': "TestPage", 'methodName': "test_write"})))
+                            data1 = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh == rh)),((((((("page.bytes.toString() == inMemory" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "==") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 49, 'className': "TestPage", 'methodName': "test_write"})))
                             tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,data1)
                             tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,tink_streams_Yield.End)
                             return asserts
@@ -2012,7 +2032,7 @@ class TestPage:
                                 def _hx_local_1(postCount):
                                     lh = (preCount + repetitions)
                                     rh = postCount
-                                    data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh == rh)),((((((("preCount + repetitions == postCount" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "==") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 75, 'className': "TestPage", 'methodName': "test_book_write"})))
+                                    data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh == rh)),((((((("preCount + repetitions == postCount" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "==") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 76, 'className': "TestPage", 'methodName': "test_book_write"})))
                                     tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,data)
                                     tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,tink_streams_Yield.End)
                                     return asserts
@@ -2038,7 +2058,7 @@ class TestPage:
                         def _hx_local_1(postCount):
                             lh = postCount
                             rh = 0
-                            data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh != rh)),((((((("postCount != 0" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "!=") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 92, 'className': "TestPage", 'methodName': "test_insert"})))
+                            data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh != rh)),((((((("postCount != 0" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "!=") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 93, 'className': "TestPage", 'methodName': "test_insert"})))
                             tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,data)
                             tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,tink_streams_Yield.End)
                             return asserts
@@ -2080,7 +2100,7 @@ class TestPage:
                                 def _hx_local_4(count1):
                                     lh = count1
                                     rh = 0
-                                    data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh != rh)),((((((("count != 0" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "!=") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 128, 'className': "TestPage", 'methodName': "test_random"})))
+                                    data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh != rh)),((((((("count != 0" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "!=") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 122, 'className': "TestPage", 'methodName': "test_random"})))
                                     tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,data)
                                     tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,tink_streams_Yield.End)
                                     return asserts
@@ -2119,13 +2139,111 @@ class TestPage:
         def _hx_local_2(page):
             dump2 = sys_io_File.append("./dump.json")
             print("Adding tree")
-            dump2.writeString((HxOverrides.stringOrNull(haxe_format_JsonPrinter.print(page.records,None,None)) + ","))
+            dump2.writeString((HxOverrides.stringOrNull(haxe_format_JsonPrinter.print(page.records,None,None)) + HxOverrides.stringOrNull((("," if ((page.number[0] != ((book.get_pages() - 1)))) else "")))))
             dump2.flush()
             dump2.close()
             return tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(tink_core_Outcome.Success(haxe_ds_Option._hx_None)))
         def _hx_local_3(cb):
             p.get().handle(cb)
         tink_core__Promise_Promise_Impl_.iterate(tmp,_hx_local_2,tink_core__Future_Future_Impl_.make(_hx_local_3,True))
+        return asserts
+
+    def test_storage_plan(self,asserts):
+        hxbk_Engine.start(_hx_AnonObject({'path': "test"}))
+        book = hxbk_storage_Book.open("test-storage-plan")
+        def _hx_local_0(val,func,iterations):
+            v = val
+            _g = 0
+            _g1 = iterations
+            while (_g < _g1):
+                i = _g
+                _g = (_g + 1)
+                v = func(v)
+            return v
+        recurse = _hx_local_0
+        def _hx_local_1(_hx_bytes):
+            string = _hx_bytes.toString()
+            return haxe_io_Bytes.ofString(("GABRIEL" + ("null" if string is None else string)))
+        def _hx_local_2(bytes1):
+            string1 = bytes1.toString()
+            return haxe_io_Bytes.ofString(HxString.substr(string1,len("GABRIEL"),None))
+        book.addStoragePlan(_hx_local_1,_hx_local_2)
+        def _hx_local_5():
+            done = tink_core_FutureTrigger()
+            http = sys_Http("https://randomuser.me/api?results=100")
+            def _hx_local_3(d):
+                request1 = tink_core_Outcome.Success(python_lib_Json.loads(d,**python__KwArgs_KwArgs_Impl_.fromT(_hx_AnonObject({'object_hook': python_Lib.dictToAnon}))))
+                done.trigger(request1)
+            http.onData = _hx_local_3
+            def _hx_local_4(e):
+                done.trigger(tink_core_Outcome.Failure(e))
+            http.onError = _hx_local_4
+            http.request(False)
+            return done
+        request = _hx_local_5
+        def _hx_local_12(results):
+            if (results.index == 0):
+                randoms = results.params[0]
+                def _hx_local_6(random):
+                    return hxbk_storage_Record(random)
+                records = HxOverrides.map(randoms.results, _hx_local_6)
+                def _hx_local_11():
+                    def _hx_local_10():
+                        def _hx_local_9():
+                            def _hx_local_8():
+                                def _hx_local_7(count):
+                                    lh = count
+                                    rh = 0
+                                    data = tink_streams_Yield.Data(tink_testrunner_Assertion(tink_testrunner__Assertion_AssertionResult_Impl_.ofBool((lh != rh)),((((((("count != 0" + " (") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(lh))) + " ") + "!=") + " ") + HxOverrides.stringOrNull(tink_unit_Assert.stringify(rh))) + ")"),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 205, 'className': "TestPage", 'methodName': "test_storage_plan"})))
+                                    tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,data)
+                                    tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,tink_streams_Yield.End)
+                                    return asserts
+                                return book.count().handle(_hx_local_7)
+                            return _hx_local_8()
+                        return book.commit().handle(tink_core__Callback_Callback_Impl_.fromNiladic(_hx_local_9))
+                    return _hx_local_10()
+                book.create(records).handle(tink_core__Callback_Callback_Impl_.fromNiladic(_hx_local_11))
+            return tink_core_Noise.Noise
+        request().handle(_hx_local_12)
+        return asserts
+
+    def test_compression(self,compressionLevel,asserts):
+        hxbk_Engine.start(_hx_AnonObject({'path': "test"}))
+        book = hxbk_storage_Book.open("test")
+        cBook = hxbk_storage_Book.open(("test-compression-level-" + Std.string(compressionLevel)))
+        def _hx_local_0(s):
+            return haxe_zip_Compress.run(s,1)
+        func = _hx_local_0
+        iterations = compressionLevel
+        def _hx_local_1(val):
+            return hxbk_Utils.recursify(val,func,iterations)
+        tmp = _hx_local_1
+        def _hx_local_2(src):
+            return haxe_zip_Uncompress.run(src,None)
+        func1 = _hx_local_2
+        iterations1 = compressionLevel
+        def _hx_local_3(val1):
+            return hxbk_Utils.recursify(val1,func1,iterations1)
+        tmp1 = _hx_local_3
+        cBook.addStoragePlan(tmp,tmp1)
+        def _hx_local_4(pageNo):
+            ret = book.read(pageNo).map(tink_core_Outcome.Success)
+            return ret.gather()
+        def _hx_local_8(page):
+            this1 = Lambda.array(page.records)
+            def _hx_local_7():
+                def _hx_local_6():
+                    def _hx_local_5():
+                        if (page.number[0] == ((book.get_pages() - 1))):
+                            tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,tink_streams_Yield.End)
+                        return
+                    return cBook.commit().handle(tink_core__Callback_Callback_Impl_.fromNiladic(_hx_local_5))
+                return _hx_local_6()
+            cBook.create(this1).handle(tink_core__Callback_Callback_Impl_.fromNiladic(_hx_local_7))
+            return tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(tink_core_Outcome.Success(haxe_ds_Option._hx_None)))
+        def _hx_local_9():
+            return tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(haxe_ds_Option.Some(True)))
+        tink_core__Promise_Promise_Impl_.iterate(list(map(_hx_local_4,hxbk_IteratorTools.toArray(IntIterator(0,book.get_pages())))),_hx_local_8,tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(tink_core_Outcome.Success(_hx_local_9))))
         return asserts
 
     @staticmethod
@@ -3684,6 +3802,56 @@ haxe_Unserializer._hx_class = haxe_Unserializer
 _hx_classes["haxe.Unserializer"] = haxe_Unserializer
 
 
+class haxe_crypto_Adler32:
+    _hx_class_name = "haxe.crypto.Adler32"
+    __slots__ = ("a1", "a2")
+    _hx_fields = ["a1", "a2"]
+    _hx_methods = ["update", "equals"]
+    _hx_statics = ["read"]
+
+    def __init__(self):
+        self.a1 = 1
+        self.a2 = 0
+
+    def update(self,b,pos,_hx_len):
+        a1 = self.a1
+        a2 = self.a2
+        _g = pos
+        _g1 = (pos + _hx_len)
+        while (_g < _g1):
+            p = _g
+            _g = (_g + 1)
+            c = b.b[p]
+            a1 = HxOverrides.mod(((a1 + c)), 65521)
+            a2 = HxOverrides.mod(((a2 + a1)), 65521)
+        self.a1 = a1
+        self.a2 = a2
+
+    def equals(self,a):
+        if (a.a1 == self.a1):
+            return (a.a2 == self.a2)
+        else:
+            return False
+
+    @staticmethod
+    def read(i):
+        a = haxe_crypto_Adler32()
+        a2a = i.readByte()
+        a2b = i.readByte()
+        a1a = i.readByte()
+        a1b = i.readByte()
+        a.a1 = ((a1a << 8) | a1b)
+        a.a2 = ((a2a << 8) | a2b)
+        return a
+
+    @staticmethod
+    def _hx_empty_init(_hx_o):
+        _hx_o.a1 = None
+        _hx_o.a2 = None
+haxe_crypto_Adler32._hx_class = haxe_crypto_Adler32
+_hx_classes["haxe.crypto.Adler32"] = haxe_crypto_Adler32
+
+
 class haxe_ds_BalancedTree:
     _hx_class_name = "haxe.ds.BalancedTree"
     __slots__ = ("root",)
@@ -4358,6 +4526,82 @@ haxe_io_BytesBuffer._hx_class = haxe_io_BytesBuffer
 _hx_classes["haxe.io.BytesBuffer"] = haxe_io_BytesBuffer
 
 
+class haxe_io_BytesInput(haxe_io_Input):
+    _hx_class_name = "haxe.io.BytesInput"
+    __slots__ = ("b", "pos", "len", "totlen")
+    _hx_fields = ["b", "pos", "len", "totlen"]
+    _hx_methods = ["readByte", "readBytes"]
+    _hx_statics = []
+    _hx_interfaces = []
+    _hx_super = haxe_io_Input
+
+
+    def __init__(self,b,pos = None,_hx_len = None):
+        if (pos is None):
+            pos = 0
+        if (_hx_len is None):
+            _hx_len = (b.length - pos)
+        if (((pos < 0) or ((_hx_len < 0))) or (((pos + _hx_len) > b.length))):
+            raise _HxException(haxe_io_Error.OutsideBounds)
+        self.b = b.b
+        self.pos = pos
+        self.len = _hx_len
+        self.totlen = _hx_len
+        self.set_bigEndian(False)
+
+    def readByte(self):
+        if (self.len == 0):
+            raise _HxException(haxe_io_Eof())
+        _hx_local_0 = self
+        _hx_local_1 = _hx_local_0.len
+        _hx_local_0.len = (_hx_local_1 - 1)
+        _hx_local_1
+        def _hx_local_5():
+            def _hx_local_4():
+                _hx_local_2 = self
+                _hx_local_3 = _hx_local_2.pos
+                _hx_local_2.pos = (_hx_local_3 + 1)
+                return _hx_local_3
+            return self.b[_hx_local_4()]
+        return _hx_local_5()
+
+    def readBytes(self,buf,pos,_hx_len):
+        if (((pos < 0) or ((_hx_len < 0))) or (((pos + _hx_len) > buf.length))):
+            raise _HxException(haxe_io_Error.OutsideBounds)
+        if ((self.len == 0) and ((_hx_len > 0))):
+            raise _HxException(haxe_io_Eof())
+        if (self.len < _hx_len):
+            _hx_len = self.len
+        b1 = self.b
+        b2 = buf.b
+        _g = 0
+        _g1 = _hx_len
+        while (_g < _g1):
+            i = _g
+            _g = (_g + 1)
+            b2[(pos + i)] = b1[(self.pos + i)]
+        _hx_local_0 = self
+        _hx_local_1 = _hx_local_0.pos
+        _hx_local_0.pos = (_hx_local_1 + _hx_len)
+        _hx_local_0.pos
+        _hx_local_2 = self
+        _hx_local_3 = _hx_local_2.len
+        _hx_local_2.len = (_hx_local_3 - _hx_len)
+        _hx_local_2.len
+        return _hx_len
+
+    @staticmethod
+    def _hx_empty_init(_hx_o):
+        _hx_o.b = None
+        _hx_o.pos = None
+        _hx_o.len = None
+        _hx_o.totlen = None
+        _hx_o.position = None
+        _hx_o.length = None
+haxe_io_BytesInput._hx_class = haxe_io_BytesInput
+_hx_classes["haxe.io.BytesInput"] = haxe_io_BytesInput
+
+
 class haxe_io_BytesOutput(haxe_io_Output):
     _hx_class_name = "haxe.io.BytesOutput"
     __slots__ = ("b",)
@@ -4461,6 +4705,649 @@ haxe_macro_Printer._hx_class = haxe_macro_Printer
 _hx_classes["haxe.macro.Printer"] = haxe_macro_Printer
 
 
+class haxe_zip_Compress:
+    _hx_class_name = "haxe.zip.Compress"
+    __slots__ = ()
+    _hx_statics = ["run"]
+
+    @staticmethod
+    def run(s,level):
+        raise _HxException("Not implemented for this platform")
+haxe_zip_Compress._hx_class = haxe_zip_Compress
+_hx_classes["haxe.zip.Compress"] = haxe_zip_Compress
+
+class haxe_zip_Huffman(Enum):
+    __slots__ = ()
+    _hx_class_name = "haxe.zip.Huffman"
+    _hx_constructs = ["Found", "NeedBit", "NeedBits"]
+
+    @staticmethod
+    def Found(i):
+        return haxe_zip_Huffman("Found", 0, [i])
+
+    @staticmethod
+    def NeedBit(left,right):
+        return haxe_zip_Huffman("NeedBit", 1, [left,right])
+
+    @staticmethod
+    def NeedBits(n,table):
+        return haxe_zip_Huffman("NeedBits", 2, [n,table])
+haxe_zip_Huffman._hx_class = haxe_zip_Huffman
+_hx_classes["haxe.zip.Huffman"] = haxe_zip_Huffman
+
+
+class haxe_zip_HuffTools:
+    _hx_class_name = "haxe.zip.HuffTools"
+    __slots__ = ()
+    _hx_methods = ["treeDepth", "treeCompress", "treeWalk", "treeMake", "make"]
+
+    def __init__(self):
+        pass
+
+    def treeDepth(self,t):
+        tmp = t.index
+        if (tmp == 0):
+            return 0
+        elif (tmp == 1):
+            b = t.params[1]
+            a = t.params[0]
+            da = self.treeDepth(a)
+            db = self.treeDepth(b)
+            return (1 + ((da if ((da < db)) else db)))
+        elif (tmp == 2):
+            raise _HxException("assert")
+        else:
+            pass
+
+    def treeCompress(self,t):
+        d = self.treeDepth(t)
+        if (d == 0):
+            return t
+        if (d == 1):
+            if (t.index == 1):
+                b = t.params[1]
+                a = t.params[0]
+                return haxe_zip_Huffman.NeedBit(self.treeCompress(a),self.treeCompress(b))
+            else:
+                raise _HxException("assert")
+        size = (1 << d)
+        table = list()
+        _g = 0
+        _g1 = size
+        while (_g < _g1):
+            i = _g
+            _g = (_g + 1)
+            table.append(haxe_zip_Huffman.Found(-1))
+        self.treeWalk(table,0,0,d,t)
+        return haxe_zip_Huffman.NeedBits(d,table)
+
+    def treeWalk(self,table,p,cd,d,t):
+        if (t.index == 1):
+            b = t.params[1]
+            a = t.params[0]
+            if (d > 0):
+                self.treeWalk(table,p,(cd + 1),(d - 1),a)
+                self.treeWalk(table,(p | ((1 << cd))),(cd + 1),(d - 1),b)
+            else:
+                python_internal_ArrayImpl._set(table, p, self.treeCompress(t))
+        else:
+            python_internal_ArrayImpl._set(table, p, self.treeCompress(t))
+
+    def treeMake(self,bits,maxbits,v,_hx_len):
+        if (_hx_len > maxbits):
+            raise _HxException("Invalid huffman")
+        idx = ((v << 5) | _hx_len)
+        if (idx in bits.h):
+            return haxe_zip_Huffman.Found(bits.h.get(idx,None))
+        v = (v << 1)
+        _hx_len = (_hx_len + 1)
+        return haxe_zip_Huffman.NeedBit(self.treeMake(bits,maxbits,v,_hx_len),self.treeMake(bits,maxbits,(v | 1),_hx_len))
+
+    def make(self,lengths,pos,nlengths,maxbits):
+        counts = list()
+        tmp = list()
+        if (maxbits > 32):
+            raise _HxException("Invalid huffman")
+        _g = 0
+        _g1 = maxbits
+        while (_g < _g1):
+            i = _g
+            _g = (_g + 1)
+            counts.append(0)
+            tmp.append(0)
+        _g2 = 0
+        _g3 = nlengths
+        while (_g2 < _g3):
+            i1 = _g2
+            _g2 = (_g2 + 1)
+            p = python_internal_ArrayImpl._get(lengths, (i1 + pos))
+            if (p >= maxbits):
+                raise _HxException("Invalid huffman")
+            python_internal_ArrayImpl._set(counts, p, ((counts[p] if p >= 0 and p < len(counts) else None) + 1))
+        code = 0
+        _g4 = 1
+        _g5 = (maxbits - 1)
+        while (_g4 < _g5):
+            i2 = _g4
+            _g4 = (_g4 + 1)
+            code = ((code + (counts[i2] if i2 >= 0 and i2 < len(counts) else None)) << 1)
+            python_internal_ArrayImpl._set(tmp, i2, code)
+        bits = haxe_ds_IntMap()
+        _g6 = 0
+        _g7 = nlengths
+        while (_g6 < _g7):
+            i3 = _g6
+            _g6 = (_g6 + 1)
+            l = python_internal_ArrayImpl._get(lengths, (i3 + pos))
+            if (l != 0):
+                n = python_internal_ArrayImpl._get(tmp, (l - 1))
+                python_internal_ArrayImpl._set(tmp, (l - 1), (n + 1))
+                bits.set(((n << 5) | l),i3)
+        return self.treeCompress(haxe_zip_Huffman.NeedBit(self.treeMake(bits,maxbits,0,1),self.treeMake(bits,maxbits,1,1)))
+
+    @staticmethod
+    def _hx_empty_init(_hx_o):        pass
+haxe_zip_HuffTools._hx_class = haxe_zip_HuffTools
+_hx_classes["haxe.zip.HuffTools"] = haxe_zip_HuffTools
+
+
+class haxe_zip__InflateImpl_Window:
+    _hx_class_name = "haxe.zip._InflateImpl.Window"
+    __slots__ = ("buffer", "pos", "crc")
+    _hx_fields = ["buffer", "pos", "crc"]
+    _hx_methods = ["slide", "addBytes", "addByte", "getLastChar", "available", "checksum"]
+
+    def __init__(self,hasCrc):
+        self.crc = None
+        self.buffer = haxe_io_Bytes.alloc(65536)
+        self.pos = 0
+        if hasCrc:
+            self.crc = haxe_crypto_Adler32()
+
+    def slide(self):
+        if (self.crc is not None):
+            self.crc.update(self.buffer,0,32768)
+        b = haxe_io_Bytes.alloc(65536)
+        _hx_local_0 = self
+        _hx_local_1 = _hx_local_0.pos
+        _hx_local_0.pos = (_hx_local_1 - 32768)
+        _hx_local_0.pos
+        b.blit(0,self.buffer,32768,self.pos)
+        self.buffer = b
+
+    def addBytes(self,b,p,_hx_len):
+        if ((self.pos + _hx_len) > 65536):
+            self.slide()
+        self.buffer.blit(self.pos,b,p,_hx_len)
+        _hx_local_0 = self
+        _hx_local_1 = _hx_local_0.pos
+        _hx_local_0.pos = (_hx_local_1 + _hx_len)
+        _hx_local_0.pos
+
+    def addByte(self,c):
+        if (self.pos == 65536):
+            self.slide()
+        self.buffer.b[self.pos] = (c & 255)
+        _hx_local_0 = self
+        _hx_local_1 = _hx_local_0.pos
+        _hx_local_0.pos = (_hx_local_1 + 1)
+        _hx_local_1
+
+    def getLastChar(self):
+        return self.buffer.b[(self.pos - 1)]
+
+    def available(self):
+        return self.pos
+
+    def checksum(self):
+        if (self.crc is not None):
+            self.crc.update(self.buffer,0,self.pos)
+        return self.crc
+
+    @staticmethod
+    def _hx_empty_init(_hx_o):
+        _hx_o.buffer = None
+        _hx_o.pos = None
+        _hx_o.crc = None
+haxe_zip__InflateImpl_Window._hx_class = haxe_zip__InflateImpl_Window
+_hx_classes["haxe.zip._InflateImpl.Window"] = haxe_zip__InflateImpl_Window
+
+class haxe_zip__InflateImpl_State(Enum):
+    __slots__ = ()
+    _hx_class_name = "haxe.zip._InflateImpl.State"
+    _hx_constructs = ["Head", "Block", "CData", "Flat", "Crc", "Dist", "DistOne", "Done"]
+haxe_zip__InflateImpl_State.Head = haxe_zip__InflateImpl_State("Head", 0, list())
+haxe_zip__InflateImpl_State.Block = haxe_zip__InflateImpl_State("Block", 1, list())
+haxe_zip__InflateImpl_State.CData = haxe_zip__InflateImpl_State("CData", 2, list())
+haxe_zip__InflateImpl_State.Flat = haxe_zip__InflateImpl_State("Flat", 3, list())
+haxe_zip__InflateImpl_State.Crc = haxe_zip__InflateImpl_State("Crc", 4, list())
+haxe_zip__InflateImpl_State.Dist = haxe_zip__InflateImpl_State("Dist", 5, list())
+haxe_zip__InflateImpl_State.DistOne = haxe_zip__InflateImpl_State("DistOne", 6, list())
+haxe_zip__InflateImpl_State.Done = haxe_zip__InflateImpl_State("Done", 7, list())
+haxe_zip__InflateImpl_State._hx_class = haxe_zip__InflateImpl_State
+_hx_classes["haxe.zip._InflateImpl.State"] = haxe_zip__InflateImpl_State
+
+
+class haxe_zip_InflateImpl:
+    _hx_class_name = "haxe.zip.InflateImpl"
+    __slots__ = ("nbits", "bits", "state", "isFinal", "huffman", "huffdist", "htools", "len", "dist", "needed", "output", "outpos", "input", "lengths", "window")
+    _hx_fields = ["nbits", "bits", "state", "isFinal", "huffman", "huffdist", "htools", "len", "dist", "needed", "output", "outpos", "input", "lengths", "window"]
+    _hx_methods = ["buildFixedHuffman", "readBytes", "getBits", "getBit", "getRevBits", "resetBits", "addBytes", "addByte", "addDistOne", "addDist", "applyHuffman", "inflateLengths", "inflateLoop"]
+    _hx_statics = ["LEN_EXTRA_BITS_TBL", "LEN_BASE_VAL_TBL", "DIST_EXTRA_BITS_TBL", "DIST_BASE_VAL_TBL", "CODE_LENGTHS_POS", "FIXED_HUFFMAN", "run"]
+
+    def __init__(self,i,header = True,crc = True):
+        if (header is None):
+            header = True
+        if (crc is None):
+            crc = True
+        self.window = None
+        self.lengths = None
+        self.input = None
+        self.outpos = None
+        self.output = None
+        self.needed = None
+        self.dist = None
+        self.len = None
+        self.huffdist = None
+        self.huffman = None
+        self.state = None
+        self.bits = None
+        self.nbits = None
+        self.isFinal = False
+        self.htools = haxe_zip_HuffTools()
+        self.huffman = self.buildFixedHuffman()
+        self.huffdist = None
+        self.len = 0
+        self.dist = 0
+        self.state = (haxe_zip__InflateImpl_State.Head if header else haxe_zip__InflateImpl_State.Block)
+        self.input = i
+        self.bits = 0
+        self.nbits = 0
+        self.needed = 0
+        self.output = None
+        self.outpos = 0
+        self.lengths = list()
+        _this = self.lengths
+        _this.append(-1)
+        _this1 = self.lengths
+        _this1.append(-1)
+        _this2 = self.lengths
+        _this2.append(-1)
+        _this3 = self.lengths
+        _this3.append(-1)
+        _this4 = self.lengths
+        _this4.append(-1)
+        _this5 = self.lengths
+        _this5.append(-1)
+        _this6 = self.lengths
+        _this6.append(-1)
+        _this7 = self.lengths
+        _this7.append(-1)
+        _this8 = self.lengths
+        _this8.append(-1)
+        _this9 = self.lengths
+        _this9.append(-1)
+        _this10 = self.lengths
+        _this10.append(-1)
+        _this11 = self.lengths
+        _this11.append(-1)
+        _this12 = self.lengths
+        _this12.append(-1)
+        _this13 = self.lengths
+        _this13.append(-1)
+        _this14 = self.lengths
+        _this14.append(-1)
+        _this15 = self.lengths
+        _this15.append(-1)
+        _this16 = self.lengths
+        _this16.append(-1)
+        _this17 = self.lengths
+        _this17.append(-1)
+        _this18 = self.lengths
+        _this18.append(-1)
+        self.window = haxe_zip__InflateImpl_Window(crc)
+
+    def buildFixedHuffman(self):
+        if (haxe_zip_InflateImpl.FIXED_HUFFMAN is not None):
+            return haxe_zip_InflateImpl.FIXED_HUFFMAN
+        a = list()
+        _g = 0
+        while (_g < 288):
+            n = _g
+            _g = (_g + 1)
+            a.append((8 if ((n <= 143)) else (9 if ((n <= 255)) else (7 if ((n <= 279)) else 8))))
+        haxe_zip_InflateImpl.FIXED_HUFFMAN = self.htools.make(a,0,288,10)
+        return haxe_zip_InflateImpl.FIXED_HUFFMAN
+
+    def readBytes(self,b,pos,_hx_len):
+        self.needed = _hx_len
+        self.outpos = pos
+        self.output = b
+        if (_hx_len > 0):
+            while self.inflateLoop():
+                pass
+        return (_hx_len - self.needed)
+
+    def getBits(self,n):
+        while (self.nbits < n):
+            _hx_local_0 = self
+            _hx_local_1 = _hx_local_0.bits
+            _hx_local_0.bits = (_hx_local_1 | ((self.input.readByte() << self.nbits)))
+            _hx_local_0.bits
+            _hx_local_2 = self
+            _hx_local_3 = _hx_local_2.nbits
+            _hx_local_2.nbits = (_hx_local_3 + 8)
+            _hx_local_2.nbits
+        b = (self.bits & ((((1 << n)) - 1)))
+        _hx_local_4 = self
+        _hx_local_5 = _hx_local_4.nbits
+        _hx_local_4.nbits = (_hx_local_5 - n)
+        _hx_local_4.nbits
+        _hx_local_6 = self
+        _hx_local_7 = _hx_local_6.bits
+        _hx_local_6.bits = (_hx_local_7 >> n)
+        _hx_local_6.bits
+        return b
+
+    def getBit(self):
+        if (self.nbits == 0):
+            self.nbits = 8
+            self.bits = self.input.readByte()
+        b = (((self.bits & 1)) == 1)
+        _hx_local_0 = self
+        _hx_local_1 = _hx_local_0.nbits
+        _hx_local_0.nbits = (_hx_local_1 - 1)
+        _hx_local_1
+        _hx_local_2 = self
+        _hx_local_3 = _hx_local_2.bits
+        _hx_local_2.bits = (_hx_local_3 >> 1)
+        _hx_local_2.bits
+        return b
+
+    def getRevBits(self,n):
+        if (n == 0):
+            return 0
+        elif self.getBit():
+            return ((1 << ((n - 1))) | self.getRevBits((n - 1)))
+        else:
+            return self.getRevBits((n - 1))
+
+    def resetBits(self):
+        self.bits = 0
+        self.nbits = 0
+
+    def addBytes(self,b,p,_hx_len):
+        self.window.addBytes(b,p,_hx_len)
+        self.output.blit(self.outpos,b,p,_hx_len)
+        _hx_local_0 = self
+        _hx_local_1 = _hx_local_0.needed
+        _hx_local_0.needed = (_hx_local_1 - _hx_len)
+        _hx_local_0.needed
+        _hx_local_2 = self
+        _hx_local_3 = _hx_local_2.outpos
+        _hx_local_2.outpos = (_hx_local_3 + _hx_len)
+        _hx_local_2.outpos
+
+    def addByte(self,b):
+        self.window.addByte(b)
+        self.output.b[self.outpos] = (b & 255)
+        _hx_local_0 = self
+        _hx_local_1 = _hx_local_0.needed
+        _hx_local_0.needed = (_hx_local_1 - 1)
+        _hx_local_1
+        _hx_local_2 = self
+        _hx_local_3 = _hx_local_2.outpos
+        _hx_local_2.outpos = (_hx_local_3 + 1)
+        _hx_local_3
+
+    def addDistOne(self,n):
+        c = self.window.getLastChar()
+        _g = 0
+        _g1 = n
+        while (_g < _g1):
+            i = _g
+            _g = (_g + 1)
+            self.addByte(c)
+
+    def addDist(self,d,_hx_len):
+        self.addBytes(self.window.buffer,(self.window.pos - d),_hx_len)
+
+    def applyHuffman(self,h):
+        tmp = h.index
+        if (tmp == 0):
+            n = h.params[0]
+            return n
+        elif (tmp == 1):
+            b = h.params[1]
+            a = h.params[0]
+            return self.applyHuffman((b if (self.getBit()) else a))
+        elif (tmp == 2):
+            tbl = h.params[1]
+            n1 = h.params[0]
+            return self.applyHuffman(python_internal_ArrayImpl._get(tbl, self.getBits(n1)))
+        else:
+            pass
+
+    def inflateLengths(self,a,_hx_max):
+        i = 0
+        prev = 0
+        while (i < _hx_max):
+            n = self.applyHuffman(self.huffman)
+            n1 = n
+            if ((((((((((((((((n1 == 15) or ((n1 == 14))) or ((n1 == 13))) or ((n1 == 12))) or ((n1 == 11))) or ((n1 == 10))) or ((n1 == 9))) or ((n1 == 8))) or ((n1 == 7))) or ((n1 == 6))) or ((n1 == 5))) or ((n1 == 4))) or ((n1 == 3))) or ((n1 == 2))) or ((n1 == 1))) or ((n1 == 0))):
+                prev = n
+                python_internal_ArrayImpl._set(a, i, n)
+                i = (i + 1)
+            elif (n1 == 16):
+                end = ((i + 3) + self.getBits(2))
+                if (end > _hx_max):
+                    raise _HxException("Invalid data")
+                while (i < end):
+                    python_internal_ArrayImpl._set(a, i, prev)
+                    i = (i + 1)
+            elif (n1 == 17):
+                i = (i + ((3 + self.getBits(3))))
+                if (i > _hx_max):
+                    raise _HxException("Invalid data")
+            elif (n1 == 18):
+                i = (i + ((11 + self.getBits(7))))
+                if (i > _hx_max):
+                    raise _HxException("Invalid data")
+            else:
+                raise _HxException("Invalid data")
+
+    def inflateLoop(self):
+        tmp = self.state.index
+        if (tmp == 0):
+            cmf = self.input.readByte()
+            cm = (cmf & 15)
+            cinfo = (cmf >> 4)
+            if (cm != 8):
+                raise _HxException("Invalid data")
+            flg = self.input.readByte()
+            fdict = (((flg & 32)) != 0)
+            if (HxOverrides.mod(((((cmf << 8)) + flg)), 31) != 0):
+                raise _HxException("Invalid data")
+            if fdict:
+                raise _HxException("Unsupported dictionary")
+            self.state = haxe_zip__InflateImpl_State.Block
+            return True
+        elif (tmp == 1):
+            self.isFinal = self.getBit()
+            _g = self.getBits(2)
+            if (_g == 0):
+                self.len = self.input.readUInt16()
+                nlen = self.input.readUInt16()
+                if (nlen != ((65535 - self.len))):
+                    raise _HxException("Invalid data")
+                self.state = haxe_zip__InflateImpl_State.Flat
+                r = self.inflateLoop()
+                self.resetBits()
+                return r
+            elif (_g == 1):
+                self.huffman = self.buildFixedHuffman()
+                self.huffdist = None
+                self.state = haxe_zip__InflateImpl_State.CData
+                return True
+            elif (_g == 2):
+                hlit = (self.getBits(5) + 257)
+                hdist = (self.getBits(5) + 1)
+                hclen = (self.getBits(4) + 4)
+                _g1 = 0
+                _g11 = hclen
+                while (_g1 < _g11):
+                    i = _g1
+                    _g1 = (_g1 + 1)
+                    python_internal_ArrayImpl._set(self.lengths, python_internal_ArrayImpl._get(haxe_zip_InflateImpl.CODE_LENGTHS_POS, i), self.getBits(3))
+                _g2 = hclen
+                _g3 = 19
+                while (_g2 < _g3):
+                    i1 = _g2
+                    _g2 = (_g2 + 1)
+                    python_internal_ArrayImpl._set(self.lengths, python_internal_ArrayImpl._get(haxe_zip_InflateImpl.CODE_LENGTHS_POS, i1), 0)
+                self.huffman = self.htools.make(self.lengths,0,19,8)
+                lengths = list()
+                _g4 = 0
+                _g5 = (hlit + hdist)
+                while (_g4 < _g5):
+                    i2 = _g4
+                    _g4 = (_g4 + 1)
+                    lengths.append(0)
+                self.inflateLengths(lengths,(hlit + hdist))
+                self.huffdist = self.htools.make(lengths,hlit,hdist,16)
+                self.huffman = self.htools.make(lengths,0,hlit,16)
+                self.state = haxe_zip__InflateImpl_State.CData
+                return True
+            else:
+                raise _HxException("Invalid data")
+        elif (tmp == 2):
+            n = self.applyHuffman(self.huffman)
+            if (n < 256):
+                self.addByte(n)
+                return (self.needed > 0)
+            elif (n == 256):
+                self.state = (haxe_zip__InflateImpl_State.Crc if (self.isFinal) else haxe_zip__InflateImpl_State.Block)
+                return True
+            else:
+                n = (n - 257)
+                extra_bits = python_internal_ArrayImpl._get(haxe_zip_InflateImpl.LEN_EXTRA_BITS_TBL, n)
+                if (extra_bits == -1):
+                    raise _HxException("Invalid data")
+                self.len = (python_internal_ArrayImpl._get(haxe_zip_InflateImpl.LEN_BASE_VAL_TBL, n) + self.getBits(extra_bits))
+                dist_code = (self.getRevBits(5) if ((self.huffdist is None)) else self.applyHuffman(self.huffdist))
+                extra_bits = python_internal_ArrayImpl._get(haxe_zip_InflateImpl.DIST_EXTRA_BITS_TBL, dist_code)
+                if (extra_bits == -1):
+                    raise _HxException("Invalid data")
+                self.dist = (python_internal_ArrayImpl._get(haxe_zip_InflateImpl.DIST_BASE_VAL_TBL, dist_code) + self.getBits(extra_bits))
+                if (self.dist > self.window.available()):
+                    raise _HxException("Invalid data")
+                self.state = (haxe_zip__InflateImpl_State.DistOne if ((self.dist == 1)) else haxe_zip__InflateImpl_State.Dist)
+                return True
+        elif (tmp == 3):
+            rlen = (self.len if ((self.len < self.needed)) else self.needed)
+            _hx_bytes = self.input.read(rlen)
+            _hx_local_1 = self
+            _hx_local_2 = _hx_local_1.len
+            _hx_local_1.len = (_hx_local_2 - rlen)
+            _hx_local_1.len
+            self.addBytes(_hx_bytes,0,rlen)
+            if (self.len == 0):
+                self.state = (haxe_zip__InflateImpl_State.Crc if (self.isFinal) else haxe_zip__InflateImpl_State.Block)
+            return (self.needed > 0)
+        elif (tmp == 4):
+            calc = self.window.checksum()
+            if (calc is None):
+                self.state = haxe_zip__InflateImpl_State.Done
+                return True
+            crc = haxe_crypto_Adler32.read(self.input)
+            if (not calc.equals(crc)):
+                raise _HxException("Invalid CRC")
+            self.state = haxe_zip__InflateImpl_State.Done
+            return True
+        elif (tmp == 5):
+            while ((self.len > 0) and ((self.needed > 0))):
+                rdist = (self.len if ((self.len < self.dist)) else self.dist)
+                rlen1 = (self.needed if ((self.needed < rdist)) else rdist)
+                self.addDist(self.dist,rlen1)
+                _hx_local_3 = self
+                _hx_local_4 = _hx_local_3.len
+                _hx_local_3.len = (_hx_local_4 - rlen1)
+                _hx_local_3.len
+            if (self.len == 0):
+                self.state = haxe_zip__InflateImpl_State.CData
+            return (self.needed > 0)
+        elif (tmp == 6):
+            rlen2 = (self.len if ((self.len < self.needed)) else self.needed)
+            self.addDistOne(rlen2)
+            _hx_local_5 = self
+            _hx_local_6 = _hx_local_5.len
+            _hx_local_5.len = (_hx_local_6 - rlen2)
+            _hx_local_5.len
+            if (self.len == 0):
+                self.state = haxe_zip__InflateImpl_State.CData
+            return (self.needed > 0)
+        elif (tmp == 7):
+            return False
+        else:
+            pass
+
+    @staticmethod
+    def run(i,bufsize = 65536):
+        if (bufsize is None):
+            bufsize = 65536
+        buf = haxe_io_Bytes.alloc(bufsize)
+        output = haxe_io_BytesBuffer()
+        inflate = haxe_zip_InflateImpl(i)
+        while True:
+            _hx_len = inflate.readBytes(buf,0,bufsize)
+            if ((_hx_len < 0) or ((_hx_len > buf.length))):
+                raise _HxException(haxe_io_Error.OutsideBounds)
+            b1 = output.b
+            b2 = buf.b
+            _g = 0
+            _g1 = _hx_len
+            while (_g < _g1):
+                i1 = _g
+                _g = (_g + 1)
+                _this = output.b
+                _this.append(b2[i1])
+            if (_hx_len < bufsize):
+                break
+        return output.getBytes()
+
+    @staticmethod
+    def _hx_empty_init(_hx_o):
+        _hx_o.nbits = None
+        _hx_o.bits = None
+        _hx_o.state = None
+        _hx_o.isFinal = None
+        _hx_o.huffman = None
+        _hx_o.huffdist = None
+        _hx_o.htools = None
+        _hx_o.len = None
+        _hx_o.dist = None
+        _hx_o.needed = None
+        _hx_o.output = None
+        _hx_o.outpos = None
+        _hx_o.input = None
+        _hx_o.lengths = None
+        _hx_o.window = None
+haxe_zip_InflateImpl._hx_class = haxe_zip_InflateImpl
+_hx_classes["haxe.zip.InflateImpl"] = haxe_zip_InflateImpl
+
+
+class haxe_zip_Uncompress:
+    _hx_class_name = "haxe.zip.Uncompress"
+    __slots__ = ()
+    _hx_statics = ["run"]
+
+    @staticmethod
+    def run(src,bufsize = None):
+        return haxe_zip_InflateImpl.run(haxe_io_BytesInput(src),bufsize)
+haxe_zip_Uncompress._hx_class = haxe_zip_Uncompress
+_hx_classes["haxe.zip.Uncompress"] = haxe_zip_Uncompress
+
+
 class hxbk_Engine:
     _hx_class_name = "hxbk.Engine"
     __slots__ = ("cfg",)
@@ -4487,8 +5374,6 @@ class hxbk_Engine:
 
     @staticmethod
     def start(config = None):
-        if (hxbk_Engine.instance is not None):
-            return
         hxbk_Engine.instance = hxbk_Engine()
         if (config is None):
             return
@@ -4508,7 +5393,7 @@ class hxbk_Engine:
     @staticmethod
     def ensure():
         if (hxbk_Engine.instance is None):
-            raise _HxException(tink_core_TypedError(500,"Engine must be initialized before beginning operation.",_hx_AnonObject({'fileName': "src/hxbk/Engine.hx", 'lineNumber': 58, 'className': "hxbk.Engine", 'methodName': "ensure"})))
+            raise _HxException(tink_core_TypedError(500,"Engine must be initialized before beginning operation.",_hx_AnonObject({'fileName': "src/hxbk/Engine.hx", 'lineNumber': 56, 'className': "hxbk.Engine", 'methodName': "ensure"})))
         if (not sys_FileSystem.exists(("./" + HxOverrides.stringOrNull(hxbk_Engine.get_path())))):
             sys_FileSystem.createDirectory(("./" + HxOverrides.stringOrNull(hxbk_Engine.get_path())))
 
@@ -4538,6 +5423,25 @@ class hxbk_IteratorTools:
         return retVal
 hxbk_IteratorTools._hx_class = hxbk_IteratorTools
 _hx_classes["hxbk.IteratorTools"] = hxbk_IteratorTools
+
+
+class hxbk_Utils:
+    _hx_class_name = "hxbk.Utils"
+    __slots__ = ()
+    _hx_statics = ["recursify"]
+
+    @staticmethod
+    def recursify(val,func,iterations):
+        v = val
+        _g = 0
+        _g1 = iterations
+        while (_g < _g1):
+            i = _g
+            _g = (_g + 1)
+            v = func(v)
+        return v
+hxbk_Utils._hx_class = hxbk_Utils
+_hx_classes["hxbk.Utils"] = hxbk_Utils
 
 
 class hxbk_concurrency_Mutex:
@@ -4703,13 +5607,14 @@ _hx_classes["hxbk.operations.Create"] = hxbk_operations_Create
 
 class hxbk_storage_Book:
     _hx_class_name = "hxbk.storage.Book"
-    __slots__ = ("dirtyPages", "name", "pageSize")
-    _hx_fields = ["dirtyPages", "name", "pageSize"]
-    _hx_methods = ["get_file", "get_stat", "get_size", "get_pages", "ensure", "createPage", "getFreePage", "write", "read", "count", "commit", "create"]
+    _hx_fields = ["dirtyPages", "name", "pageSize", "serializationHooks", "deserializationHooks"]
+    _hx_methods = ["get_file", "get_stat", "get_size", "get_pages", "ensure", "createPage", "getFreePage", "postSerialization", "preDeserialization", "addStoragePlan", "write", "read", "count", "commit", "create"]
     _hx_statics = ["open"]
 
     def __init__(self,n):
         self.pageSize = None
+        self.deserializationHooks = []
+        self.serializationHooks = []
         self.dirtyPages = haxe_ds_IntMap()
         self.name = n
 
@@ -4759,6 +5664,31 @@ class hxbk_storage_Book:
                 return self.read(pageNo)
         return tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(self.createPage()))
 
+    def postSerialization(self,_b):
+        b = _b
+        _g = 0
+        _g1 = self.serializationHooks
+        while (_g < len(_g1)):
+            hook = (_g1[_g] if _g >= 0 and _g < len(_g1) else None)
+            _g = (_g + 1)
+            b = hook(b)
+        return b
+
+    def preDeserialization(self,_b):
+        b = _b
+        _g = 0
+        _g1 = self.deserializationHooks
+        while (_g < len(_g1)):
+            hook = (_g1[_g] if _g >= 0 and _g < len(_g1) else None)
+            _g = (_g + 1)
+            b = hook(b)
+        return b
+
+    def addStoragePlan(self,serialize,deserialize):
+        _this = self.serializationHooks
+        _this.append(serialize)
+        self.deserializationHooks.insert(0, deserialize)
+
     def write(self,page):
         _gthis = self
         done = tink_core_FutureTrigger()
@@ -4795,7 +5725,7 @@ class hxbk_storage_Book:
             length = read.readInt16()
             pageBytes = read.read(length)
             if (pageBytes.length > 0):
-                page = hxbk_storage_Serializer.deserialize(pageBytes)
+                page = hxbk_storage_Serializer.deserialize(pageBytes,_gthis.preDeserialization)
                 this1 = [None]*1
                 this2 = this1
                 ret = this2
@@ -4812,18 +5742,24 @@ class hxbk_storage_Book:
         return done
 
     def count(self):
+        _gthis = self
+        done = tink_core_FutureTrigger()
         stackEntry = haxe_CallStack.toString(haxe_CallStack.callStack()[0:1])
-        def _hx_local_2(pages):
-            total = 0
-            def _hx_local_1(page):
-                nonlocal total
-                count = Lambda.count(page.records)
-                total = (total + count)
-                return total
-            Lambda.iter(pages,_hx_local_1)
-            return total
-        ret = tink_core__Future_Future_Impl_.ofMany(list(map(self.read,hxbk_IteratorTools.toArray(IntIterator(0,self.get_pages()))))).map(_hx_local_2)
-        return ret.gather()
+        total = 0
+        def _hx_local_0(pageNo):
+            ret = _gthis.read(pageNo).map(tink_core_Outcome.Success)
+            return ret.gather()
+        def _hx_local_2(page):
+            nonlocal total
+            total = (total + Lambda.count(page.records))
+            print(str(("Total is now " + Std.string(total))))
+            return tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(tink_core_Outcome.Success(haxe_ds_Option._hx_None)))
+        def _hx_local_3():
+            done.trigger(total)
+            print(str(("Final total: " + Std.string(total))))
+            return tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(haxe_ds_Option.Some(True)))
+        tink_core__Promise_Promise_Impl_.iterate(list(map(_hx_local_0,hxbk_IteratorTools.toArray(IntIterator(0,self.get_pages())))),_hx_local_2,tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(tink_core_Outcome.Success(_hx_local_3))))
+        return done
 
     def commit(self):
         _gthis = self
@@ -4915,6 +5851,8 @@ class hxbk_storage_Book:
         _hx_o.dirtyPages = None
         _hx_o.name = None
         _hx_o.pageSize = None
+        _hx_o.serializationHooks = None
+        _hx_o.deserializationHooks = None
 hxbk_storage_Book._hx_class = hxbk_storage_Book
 _hx_classes["hxbk.storage.Book"] = hxbk_storage_Book
 
@@ -4946,7 +5884,7 @@ class hxbk_storage_Page:
             this1[0] = param
 
     def get_bytes(self):
-        return hxbk_storage_Serializer.serialize(self)
+        return hxbk_storage_Serializer.serialize(self,self.book.postSerialization)
 
     def get_size(self):
         return self.get_bytes().length
@@ -5297,7 +6235,7 @@ _hx_classes["_HxException"] = _HxException
 class HxOverrides:
     _hx_class_name = "HxOverrides"
     __slots__ = ()
-    _hx_statics = ["iterator", "eq", "stringOrNull", "map", "mapKwArgs"]
+    _hx_statics = ["iterator", "eq", "stringOrNull", "map", "modf", "mod", "mapKwArgs"]
 
     @staticmethod
     def iterator(x):
@@ -5323,6 +6261,14 @@ class HxOverrides:
         if isinstance(x,list):
             return list(map(f,x))
         return x.map(f)
+
+    @staticmethod
+    def modf(a,b):
+        return float('nan') if (b == 0.0) else a % b if a >= 0 else -(-a % b)
+
+    @staticmethod
+    def mod(a,b):
+        return a % b if a >= 0 else -(-a % b)
 
     @staticmethod
     def mapKwArgs(a,v):
@@ -8080,8 +9026,8 @@ class tink_core__Promise_Promise_Impl_:
                 sync = False
                 def _hx_local_2(o):
                     def _hx_local_1(_):
-                        nonlocal sync
                         nonlocal p
+                        nonlocal sync
                         sync = True
                         p = None
                     o.b.handle(_hx_local_1)
@@ -9031,10 +9977,10 @@ class tink_streams__Stream_RegroupStream(tink_streams__Stream_CompoundStream):
         def _hx_local_3(item):
             buf.append(item)
             def _hx_local_2(o):
-                nonlocal ret
-                nonlocal ret
-                nonlocal ret
                 nonlocal terminated
+                nonlocal ret
+                nonlocal ret
+                nonlocal ret
                 ret3 = o.index
                 if (ret3 == 0):
                     v = o.params[0]
@@ -11039,52 +11985,52 @@ class tink_unit_TestSuiteBuilder0(tink_unit_TestSuiteBase):
 
 
     def __init__(self,target,name = None):
-        pos = _hx_AnonObject({'lineNumber': 27, 'fileName': "src/RunTests.hx", 'methodName': "test_no_engine", 'className': "TestPage"})
+        pos = _hx_AnonObject({'lineNumber': 28, 'fileName': "src/RunTests.hx", 'methodName': "test_no_engine", 'className': "TestPage"})
         def _hx_local_0():
             this1 = tink_unit__AssertionBuffer_Impl()
             return target.test_no_engine(this1)
-        tmp = tink_unit_TestCase(_hx_AnonObject({'name': "test_no_engine", 'description': None, 'pos': _hx_AnonObject({'lineNumber': 27, 'fileName': "src/RunTests.hx", 'methodName': "test_no_engine", 'className': "TestPage"})}),_hx_local_0,100000,False,False,pos)
+        tmp = tink_unit_TestCase(_hx_AnonObject({'name': "test_no_engine", 'description': None, 'pos': _hx_AnonObject({'lineNumber': 28, 'fileName': "src/RunTests.hx", 'methodName': "test_no_engine", 'className': "TestPage"})}),_hx_local_0,100000,False,False,pos)
         pos1 = _hx_AnonObject({'lineNumber': 100, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})
         def _hx_local_1():
             this2 = tink_unit__AssertionBuffer_Impl()
-            return target.test_random(1,this2)
-        tmp1 = tink_unit_TestCase(_hx_AnonObject({'name': "test_random", 'description': "1", 'pos': _hx_AnonObject({'lineNumber': 100, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})}),_hx_local_1,100000,False,False,pos1)
-        pos2 = _hx_AnonObject({'lineNumber': 101, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})
+            return target.test_random(100,this2)
+        tmp1 = tink_unit_TestCase(_hx_AnonObject({'name': "test_random", 'description': "100", 'pos': _hx_AnonObject({'lineNumber': 100, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})}),_hx_local_1,100000,False,False,pos1)
+        pos2 = _hx_AnonObject({'lineNumber': 133, 'fileName': "src/RunTests.hx", 'methodName': "test_dump", 'className': "TestPage"})
         def _hx_local_2():
             this3 = tink_unit__AssertionBuffer_Impl()
-            return target.test_random(5,this3)
-        tmp2 = tink_unit_TestCase(_hx_AnonObject({'name': "test_random", 'description': "5", 'pos': _hx_AnonObject({'lineNumber': 101, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})}),_hx_local_2,100000,False,False,pos2)
-        pos3 = _hx_AnonObject({'lineNumber': 102, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})
+            return target.test_dump(this3)
+        tmp2 = tink_unit_TestCase(_hx_AnonObject({'name': "test_dump", 'description': None, 'pos': _hx_AnonObject({'lineNumber': 133, 'fileName': "src/RunTests.hx", 'methodName': "test_dump", 'className': "TestPage"})}),_hx_local_2,100000,False,False,pos2)
+        pos3 = _hx_AnonObject({'lineNumber': 166, 'fileName': "src/RunTests.hx", 'methodName': "test_storage_plan", 'className': "TestPage"})
         def _hx_local_3():
             this4 = tink_unit__AssertionBuffer_Impl()
-            return target.test_random(10,this4)
-        tmp3 = tink_unit_TestCase(_hx_AnonObject({'name': "test_random", 'description': "10", 'pos': _hx_AnonObject({'lineNumber': 102, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})}),_hx_local_3,100000,False,False,pos3)
-        pos4 = _hx_AnonObject({'lineNumber': 103, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})
+            return target.test_storage_plan(this4)
+        tmp3 = tink_unit_TestCase(_hx_AnonObject({'name': "test_storage_plan", 'description': None, 'pos': _hx_AnonObject({'lineNumber': 166, 'fileName': "src/RunTests.hx", 'methodName': "test_storage_plan", 'className': "TestPage"})}),_hx_local_3,100000,False,False,pos3)
+        pos4 = _hx_AnonObject({'lineNumber': 216, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})
         def _hx_local_4():
             this5 = tink_unit__AssertionBuffer_Impl()
-            return target.test_random(50,this5)
-        tmp4 = tink_unit_TestCase(_hx_AnonObject({'name': "test_random", 'description': "50", 'pos': _hx_AnonObject({'lineNumber': 103, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})}),_hx_local_4,100000,False,False,pos4)
-        pos5 = _hx_AnonObject({'lineNumber': 104, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})
+            return target.test_compression(1,this5)
+        tmp4 = tink_unit_TestCase(_hx_AnonObject({'name': "test_compression", 'description': "1", 'pos': _hx_AnonObject({'lineNumber': 216, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})}),_hx_local_4,100000,False,False,pos4)
+        pos5 = _hx_AnonObject({'lineNumber': 217, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})
         def _hx_local_5():
             this6 = tink_unit__AssertionBuffer_Impl()
-            return target.test_random(100,this6)
-        tmp5 = tink_unit_TestCase(_hx_AnonObject({'name': "test_random", 'description': "100", 'pos': _hx_AnonObject({'lineNumber': 104, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})}),_hx_local_5,100000,False,False,pos5)
-        pos6 = _hx_AnonObject({'lineNumber': 105, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})
+            return target.test_compression(2,this6)
+        tmp5 = tink_unit_TestCase(_hx_AnonObject({'name': "test_compression", 'description': "2", 'pos': _hx_AnonObject({'lineNumber': 217, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})}),_hx_local_5,100000,False,False,pos5)
+        pos6 = _hx_AnonObject({'lineNumber': 218, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})
         def _hx_local_6():
             this7 = tink_unit__AssertionBuffer_Impl()
-            return target.test_random(250,this7)
-        tmp6 = tink_unit_TestCase(_hx_AnonObject({'name': "test_random", 'description': "250", 'pos': _hx_AnonObject({'lineNumber': 105, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})}),_hx_local_6,100000,False,False,pos6)
-        pos7 = _hx_AnonObject({'lineNumber': 106, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})
+            return target.test_compression(3,this7)
+        tmp6 = tink_unit_TestCase(_hx_AnonObject({'name': "test_compression", 'description': "3", 'pos': _hx_AnonObject({'lineNumber': 218, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})}),_hx_local_6,100000,False,False,pos6)
+        pos7 = _hx_AnonObject({'lineNumber': 219, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})
         def _hx_local_7():
             this8 = tink_unit__AssertionBuffer_Impl()
-            return target.test_random(500,this8)
-        tmp7 = tink_unit_TestCase(_hx_AnonObject({'name': "test_random", 'description': "500", 'pos': _hx_AnonObject({'lineNumber': 106, 'fileName': "src/RunTests.hx", 'methodName': "test_random", 'className': "TestPage"})}),_hx_local_7,100000,False,False,pos7)
-        pos8 = _hx_AnonObject({'lineNumber': 139, 'fileName': "src/RunTests.hx", 'methodName': "test_dump", 'className': "TestPage"})
+            return target.test_compression(4,this8)
+        tmp7 = tink_unit_TestCase(_hx_AnonObject({'name': "test_compression", 'description': "4", 'pos': _hx_AnonObject({'lineNumber': 219, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})}),_hx_local_7,100000,False,False,pos7)
+        pos8 = _hx_AnonObject({'lineNumber': 220, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})
         def _hx_local_8():
             this9 = tink_unit__AssertionBuffer_Impl()
-            return target.test_dump(this9)
-        tmp8 = tink_unit_TestCase(_hx_AnonObject({'name': "test_dump", 'description': None, 'pos': _hx_AnonObject({'lineNumber': 139, 'fileName': "src/RunTests.hx", 'methodName': "test_dump", 'className': "TestPage"})}),_hx_local_8,100000,False,False,pos8)
-        super().__init__(_hx_AnonObject({'name': ("TestPage" if ((name is None)) else name), 'pos': _hx_AnonObject({'lineNumber': 24, 'fileName': "src/RunTests.hx", 'methodName': None, 'className': "TestPage"})}),[tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8],_hx_AnonObject({'fileName': "tink/unit/TestBuilder.hx", 'lineNumber': 129, 'className': "tink.unit.TestSuiteBuilder0", 'methodName': "new"}))
+            return target.test_compression(5,this9)
+        tmp8 = tink_unit_TestCase(_hx_AnonObject({'name': "test_compression", 'description': "5", 'pos': _hx_AnonObject({'lineNumber': 220, 'fileName': "src/RunTests.hx", 'methodName': "test_compression", 'className': "TestPage"})}),_hx_local_8,100000,False,False,pos8)
+        super().__init__(_hx_AnonObject({'name': ("TestPage" if ((name is None)) else name), 'pos': _hx_AnonObject({'lineNumber': 25, 'fileName': "src/RunTests.hx", 'methodName': None, 'className': "TestPage"})}),[tmp, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8],_hx_AnonObject({'fileName': "tink/unit/TestBuilder.hx", 'lineNumber': 129, 'className': "tink.unit.TestSuiteBuilder0", 'methodName': "new"}))
         self.target = target
 
     def setup(self):
@@ -11213,6 +12159,12 @@ haxe_Serializer.BASE64_CODES = None
 haxe_Unserializer.DEFAULT_RESOLVER = haxe__Unserializer_DefaultResolver()
 haxe_Unserializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:"
 haxe_Unserializer.CODES = None
+haxe_zip_InflateImpl.LEN_EXTRA_BITS_TBL = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, -1, -1]
+haxe_zip_InflateImpl.LEN_BASE_VAL_TBL = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258]
+haxe_zip_InflateImpl.DIST_EXTRA_BITS_TBL = [0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, -1, -1]
+haxe_zip_InflateImpl.DIST_BASE_VAL_TBL = [1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193, 257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145, 8193, 12289, 16385, 24577]
+haxe_zip_InflateImpl.CODE_LENGTHS_POS = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]
+haxe_zip_InflateImpl.FIXED_HUFFMAN = None
 hxbk_concurrency_SharedAccess.accessLog = haxe_ds_StringMap()
 sys_Http.PROXY = None
 tink_core__Callback_Callback_Impl_.depth = 0

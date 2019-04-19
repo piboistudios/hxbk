@@ -37,7 +37,7 @@ class Page {
 	public var bytes(get, never):Bytes;
 
 	public function get_bytes() {
-		return this.serialize();
+		return this.serialize(book.postSerialization);
 	}
 
 	public var size(get, never):Int;

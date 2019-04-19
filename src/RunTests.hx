@@ -1,8 +1,9 @@
 package;
+import haxe.io.Bytes;
 import sys.io.File;
 import sys.Http;
 using hxbk.IteratorTools;
-
+using Lambda;
 import tink.testrunner.*;
 import tink.unit.Assert.assert;
 import tink.unit.*;
@@ -96,14 +97,7 @@ class TestPage {
 		});
 		return asserts;
 	}
-	
-	@:variant(1)
-	@:variant(5)
-	@:variant(10)
-	@:variant(50)
 	@:variant(100)
-	@:variant(250)
-	@:variant(500)
 	public function test_random(count:Int) {
 		Engine.start({path: 'test'});
 		var request = () -> {
@@ -113,7 +107,7 @@ class TestPage {
 			http.onError = function(e) done.trigger(Failure(e));
 			http.request(false);
 			return done.asFuture();
-		}
+		};
 		request().handle(results -> {
 			trace('results: $results');
 			switch(results) {
@@ -149,7 +143,7 @@ class TestPage {
 		}), page -> {
 			var dump = File.append('./dump.json');
 			trace('Adding tree');
-			dump.writeString(haxe.Json.stringify(page.records) + ',');
+			 dump.writeString(haxe.Json.stringify(page.records) + (page.number.value != book.pages - 1  ? ',' : ''));
 			dump.flush();
 			dump.close();
 			if(false) return Some(false);
@@ -166,6 +160,86 @@ class TestPage {
 			return done.asFuture();
 			
 		}))));
+		return asserts;
+	}
+	
+	public function test_storage_plan() {
+		Engine.start({path: 'test'});
+		var book = Book.open('test-storage-plan');
+		var recurse = (val, func, iterations) -> {
+			var v = val;
+			for(i in 0...iterations) {
+				v = func(v);
+			}
+			return v;
+		}
+		
+		book.addStoragePlan(
+			bytes -> {
+				var string = bytes.toString();
+				return Bytes.ofString('GABRIEL$string');
+			},
+			bytes -> {
+				var string= bytes.toString();
+				return Bytes.ofString(string.substr('GABRIEL'.length));
+			}
+		);
+		var request = () -> {
+			var done = Future.trigger();
+			var http = new Http('https://randomuser.me/api?results=100');
+			http.onData = function(d) done.trigger(Success(haxe.Json.parse(d)));
+			http.onError = function(e) done.trigger(Failure(e));
+			http.request(false);
+			return done.asFuture();
+		}
+		request().handle(results -> {
+			// trace('results: $results');
+			switch(results) {
+				case Success(randoms):
+			var records:Array<Record> = randoms.results.map(random -> new Record(random));
+			// trace('records: $records');
+			book.create(records)
+			.handle(() -> {
+				book.commit().handle(() -> {
+					book.count().handle(count -> {
+						asserts.assert(count != 0);
+						asserts.done();
+					});
+				});
+			});
+			default:
+			}
+			return Noise;
+		});
+		return asserts;
+	}
+	@:variant(1)
+	@:variant(2)
+	@:variant(3)
+	@:variant(4)
+	@:variant(5)
+	public function test_compression(compressionLevel:Int) {
+		Engine.start({path: 'test'});
+		var book = Book.open('test');
+		var cBook = Book.open('test-compression-level-$compressionLevel');
+		cBook.addStoragePlan(
+			hxbk.Utils.recursify.bind(_, haxe.zip.Compress.run.bind(_, 1), compressionLevel),
+			hxbk.Utils.recursify.bind(_, haxe.zip.Uncompress.run.bind(_, null), compressionLevel)
+		);
+		Promise.iterate((0...book.pages).toArray().map(pageNo -> {
+			return book.read(pageNo).map(Success);
+		}), page -> {
+			cBook.create(page.records.array()).handle(() -> {
+				cBook.commit().handle(() -> {
+					if(page.number.value == book.pages - 1) {
+						asserts.done();
+					}
+				});
+			});
+			return None;
+		}, () -> {
+			return Future.sync(Some(true));
+		});
 		return asserts;
 	}
 }

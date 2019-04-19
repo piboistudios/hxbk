@@ -24,6 +24,7 @@ class Book {
 		Engine.ensure();
 		return './${Engine.path}/$name.hxbk';
 	}
+	
 
 	public var stat(get, never):FileStat;
 
@@ -79,7 +80,26 @@ class Book {
 
 		return createPage();
 	}
-
+	var serializationHooks:Array<Bytes->Bytes> = [];
+	var deserializationHooks:Array<Bytes->Bytes> = [];
+	@:noCompletion public dynamic function postSerialization(_b:Bytes) { 
+		var b = _b;
+		for(hook in serializationHooks) {
+			b = hook(b);
+		}
+		return b;
+	}
+	@:noCompletion public dynamic function preDeserialization(_b:Bytes) { 
+		var b = _b;
+		for(hook in deserializationHooks) {
+			b = hook(b);
+		}
+		return b;
+	}
+	public function addStoragePlan(serialize:Bytes->Bytes, deserialize:Bytes->Bytes) {
+		serializationHooks.push(serialize);
+		deserializationHooks.insert(0, deserialize);
+	}
 	public function write(page:Page) {
 		var done = Future.trigger();
 		SharedAccess.acquire('book-$name-page-${page.number}').handle(unlock -> {
@@ -110,7 +130,7 @@ class Book {
 			var length = read.readInt16();
 			var pageBytes = read.read(length);
 			if (pageBytes.length > 0) {
-				var page:Page = Serializer.deserialize(pageBytes);
+				var page:Page = Serializer.deserialize(pageBytes, preDeserialization);
 				@:privateAccess page.setNumber(pageNo);
 				@:privateAccess page.book = this;
 				done.trigger(page);
@@ -123,16 +143,22 @@ class Book {
 		return done.asFuture();
 	}
 	public function count() {
+		var done = Future.trigger();
 		var stackEntry = haxe.CallStack.toString(haxe.CallStack.callStack().slice(0, 1));
-		return Future.ofMany((0...pages).toArray().map(read)).map(pages -> {
-			var total = 0;
-			pages.iter(page -> {
-				var count = page.records.count();
-				total += count;
-			});
-			
-			return total;
+		var total = 0;
+		Promise.iterate(
+		(0...pages).toArray().map(pageNo -> {
+			return Promise.lazy(cast(Lazy.ofFunc(() -> read(pageNo))));
+		}), 
+		page -> {
+			total += page.records.count();
+			return None;
+		},
+		() -> {
+			done.trigger(total);
+			return Future.sync(Some(true));
 		});
+		return done.asFuture();
 	}
 
 	public function commit() {
@@ -163,10 +189,7 @@ class Book {
 			try {
 
 			pageNos.map(pageNo -> {
-				
-
-				return read(pageNo).map(Success);
-			
+				return Promise.lazy(cast(Lazy.ofFunc(() -> read(pageNo))));
 			});
 			} catch(e:Dynamic) {
 				throw e;

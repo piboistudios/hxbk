@@ -36,8 +36,6 @@ class Engine {
 	}
 
 	public static function start(?config:haxe.DynamicAccess<Any>) {
-		if (Engine.instance != null)
-			return;
 		Engine.instance = new Engine();
 		if (config == null)
 			return;
@@ -52,7 +50,7 @@ class Engine {
 			trace(dAccessConfig);
 		}
 	}
-
+	
 	public static function ensure() {
 		if (Engine.instance == null)
 			throw new Error(InternalError, NotInitialized);
