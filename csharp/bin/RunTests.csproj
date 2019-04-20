@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace></RootNamespace>
+    <AssemblyName>RunTests</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+	
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  
+  </ItemGroup>
+  <ItemGroup>
+	
+    <Compile Include="src\haxe\ds\List.cs"/>
+	
+    <Compile Include="src\Std.cs"/>
+	
+    <Compile Include="src\haxe\io\Output.cs"/>
+	
+    <Compile Include="src\cs\internal\Function.cs"/>
+	
+    <Compile Include="src\haxe\macro\Printer.cs"/>
+	
+    <Compile Include="src\tink\runloop\QueueWorker.cs"/>
+	
+    <Compile Include="src\tink\unit\TestCase.cs"/>
+	
+    <Compile Include="src\tink\core\Named.cs"/>
+	
+    <Compile Include="src\tink\testrunner\Timer.cs"/>
+	
+    <Compile Include="src\tink\core\Lazy.cs"/>
+	
+    <Compile Include="src\haxe\EntryPoint.cs"/>
+	
+    <Compile Include="src\haxe\io\Eof.cs"/>
+	
+    <Compile Include="src\Type.cs"/>
+	
+    <Compile Include="src\tink\core\Signal.cs"/>
+	
+    <Compile Include="src\tink\core\Future.cs"/>
+	
+    <Compile Include="src\sys\io\FileOutput.cs"/>
+	
+    <Compile Include="src\Lambda.cs"/>
+	
+    <Compile Include="src\haxe\Unserializer.cs"/>
+	
+    <Compile Include="src\tink\concurrent\Queue.cs"/>
+	
+    <Compile Include="src\tink\core\Promise.cs"/>
+	
+    <Compile Include="src\StringTools.cs"/>
+	
+    <Compile Include="src\tink\testrunner\Case.cs"/>
+	
+    <Compile Include="src\Reflect.cs"/>
+	
+    <Compile Include="src\tink\streams\Stream.cs"/>
+	
+    <Compile Include="src\tink\testrunner\Assertion.cs"/>
+	
+    <Compile Include="src\sys\io\Process.cs"/>
+	
+    <Compile Include="src\tink\concurrent\Mutex.cs"/>
+	
+    <Compile Include="src\tink\unit\TestSuite.cs"/>
+	
+    <Compile Include="src\haxe\ds\StringMap.cs"/>
+	
+    <Compile Include="src\tink\core\Outcome.cs"/>
+	
+    <Compile Include="src\tink\core\Error.cs"/>
+	
+    <Compile Include="src\hxbk\operations\Result.cs"/>
+	
+    <Compile Include="src\hxbk\storage\Serializer.cs"/>
+	
+    <Compile Include="src\cs\internal\StringExt.cs"/>
+	
+    <Compile Include="src\cs\internal\Runtime.cs"/>
+	
+    <Compile Include="src\sys\io\FileInput.cs"/>
+	
+    <Compile Include="src\cs\io\NativeOutput.cs"/>
+	
+    <Compile Include="src\haxe\ds\Either.cs"/>
+	
+    <Compile Include="src\tink\runloop\WorkResult.cs"/>
+	
+    <Compile Include="src\hxbk\IteratorTools.cs"/>
+	
+    <Compile Include="src\hxbk\storage\Page.cs"/>
+	
+    <Compile Include="src\haxe\Timer.cs"/>
+	
+    <Compile Include="src\haxe\MainLoop.cs"/>
+	
+    <Compile Include="src\tink\concurrent\Thread.cs"/>
+	
+    <Compile Include="src\IntIterator.cs"/>
+	
+    <Compile Include="src\tink\testrunner\Runner.cs"/>
+	
+    <Compile Include="src\cs\internal\FieldLookup.cs"/>
+	
+    <Compile Include="src\tink\testrunner\Reporter.cs"/>
+	
+    <Compile Include="src\tink\streams\IdealStream.cs"/>
+	
+    <Compile Include="src\tink\unit\AssertionBuffer.cs"/>
+	
+    <Compile Include="src\hxbk\storage\Record.cs"/>
+	
+    <Compile Include="src\haxe\io\Input.cs"/>
+	
+    <Compile Include="src\tink\runloop\Task.cs"/>
+	
+    <Compile Include="src\cs\Boot.cs"/>
+	
+    <Compile Include="src\haxe\lang\Null.cs"/>
+	
+    <Compile Include="src\haxe\Log.cs"/>
+	
+    <Compile Include="src\Array.cs"/>
+	
+    <Compile Include="src\hxbk\concurrency\SharedAccess.cs"/>
+	
+    <Compile Include="src\haxe\ds\BalancedTree.cs"/>
+	
+    <Compile Include="src\hxbk\StorageTools.cs"/>
+	
+    <Compile Include="src\hxbk\Engine.cs"/>
+	
+    <Compile Include="src\haxe\io\Encoding.cs"/>
+	
+    <Compile Include="src\RunTests.cs"/>
+	
+    <Compile Include="src\Sys.cs"/>
+	
+    <Compile Include="src\haxe\ds\Option.cs"/>
+	
+    <Compile Include="src\haxe\format\JsonPrinter.cs"/>
+	
+    <Compile Include="src\Date.cs"/>
+	
+    <Compile Include="src\haxe\io\Error.cs"/>
+	
+    <Compile Include="src\tink\core\Noise.cs"/>
+	
+    <Compile Include="src\tink\core\Callback.cs"/>
+	
+    <Compile Include="src\sys\io\FileSeek.cs"/>
+	
+    <Compile Include="src\ANSI.cs"/>
+	
+    <Compile Include="src\tink\unit\TestBatch.cs"/>
+	
+    <Compile Include="src\tink\core\Option.cs"/>
+	
+    <Compile Include="src\haxe\io\Bytes.cs"/>
+	
+    <Compile Include="src\tink\testrunner\Suite.cs"/>
+	
+    <Compile Include="src\hxbk\storage\Book.cs"/>
+	
+    <Compile Include="src\haxe\Constraints.cs"/>
+	
+    <Compile Include="src\haxe\ds\ObjectMap.cs"/>
+	
+    <Compile Include="src\hxbk\concurrency\Mutex.cs"/>
+	
+    <Compile Include="src\tink\streams\RealStream.cs"/>
+	
+    <Compile Include="src\tink\RunLoop.cs"/>
+	
+    <Compile Include="src\tink\testrunner\Assertions.cs"/>
+	
+    <Compile Include="src\sys\FileSystem.cs"/>
+	
+    <Compile Include="src\tink\testrunner\Batch.cs"/>
+	
+    <Compile Include="src\cs\Lib.cs"/>
+	
+    <Compile Include="src\tink\core\Annex.cs"/>
+	
+    <Compile Include="src\EReg.cs"/>
+	
+    <Compile Include="src\tink\unit\Assert.cs"/>
+	
+    <Compile Include="src\tink\unit\TestSuiteBuilder0.cs"/>
+	
+    <Compile Include="src\haxe\Serializer.cs"/>
+	
+    <Compile Include="src\cs\internal\HxObject.cs"/>
+	
+    <Compile Include="src\cs\internal\Exceptions.cs"/>
+	
+    <Compile Include="src\Math.cs"/>
+	
+    <Compile Include="src\sys\io\File.cs"/>
+	
+    <Compile Include="src\cs\io\NativeInput.cs"/>
+	
+    <Compile Include="src\tink\core\Pair.cs"/>
+	
+    <Compile Include="src\haxe\ds\EnumValueMap.cs"/>
+	
+    <Compile Include="src\tink\core\Ref.cs"/>
+	
+    <Compile Include="src\tink\runloop\Worker.cs"/>
+	
+    <Compile Include="src\haxe\ds\IntMap.cs"/>
+	
+    <Compile Include="src\haxe\CallStack.cs"/>
+	
+    <Compile Include="src\StringBuf.cs"/>
+	
+  </ItemGroup>
+  
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

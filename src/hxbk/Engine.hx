@@ -12,7 +12,7 @@ class Engine {
 	var cfg:Dynamic = {
 		path: '',
 		book: {
-			pageSize: 8000,
+			pageSize: 16000,
 			maxInsertSize: 250
 		}
 	};

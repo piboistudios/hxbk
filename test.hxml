@@ -1,12 +1,19 @@
 -lib tink_unittest
+-lib tink_runloop
+
 -cp src
 -main RunTests
 --each
--hl test.hl
+# -lib hxssl
+# --interp
+# --next
+# -hl test.hl
 --next
 -python test.py
 --next
 -neko test.n
+# --next
+# -cs csharp/bin
 # --next
 # -lib hxssl
 # --interp

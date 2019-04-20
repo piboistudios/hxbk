@@ -11,10 +11,12 @@ class Page {
 	public var dirty(default, null):Bool;
 
 	@:noCompletion public function touch() {
+		if(book != null) @:privateAccess book.dirtyPages.set(number.value != -1 ? number.value : -book.dirtyPages.count(), this);
 		dirty = true;
 	}
 
 	@:noCompletion public function cleanse() {
+		
 		dirty = false;
 	}
 
@@ -47,7 +49,7 @@ class Page {
 	}
 
 	function attempt(operation:Void->Void) {
-		var tmpRecords = records;
+		var tmpRecords = records.array();
 		var wasDirty = dirty;
 		try {
 			operation();
@@ -56,7 +58,9 @@ class Page {
 			throw e;
 		}
 		if (size >= book.pageSize) {
-			records = tmpRecords;
+			trace('Overflow $size >= ${book.pageSize} (${bytes.length})');
+			records = new BalancedTree<Int, Record>();
+			tmpRecords.iter(record -> records.set(record.index, record));
 			if(!wasDirty) cleanse();
 			return false;
 		}
