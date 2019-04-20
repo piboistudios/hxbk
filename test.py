@@ -2009,8 +2009,8 @@ class MainSuite:
         return asserts
 
     def test_dump(self,asserts):
-        hxbk_Engine.start(_hx_AnonObject({'path': "test"}))
-        book = hxbk_storage_Book.open("test")
+        hxbk_Engine.start(_hx_AnonObject({'path': "http"}))
+        book = hxbk_storage_Book.open("random")
         dump = sys_io_File.write("./dump.json")
         dump.writeString("[")
         haxe_Log.trace("Opening",_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 82, 'className': "MainSuite", 'methodName': "test_dump"}))
@@ -2028,7 +2028,7 @@ class MainSuite:
             return _hx_local_2()
         tmp = list(map(_hx_local_3,hxbk_IteratorTools.toArray(IntIterator(0,book.get_pages()))))
         def _hx_local_4():
-            haxe_Log.trace("Done",_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 97, 'className': "MainSuite", 'methodName': "test_dump"}))
+            haxe_Log.trace("Done",_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 98, 'className': "MainSuite", 'methodName': "test_dump"}))
             dump1 = sys_io_File.append("./dump.json")
             dump1.writeString("]")
             dump1.flush()
@@ -2041,7 +2041,7 @@ class MainSuite:
         def _hx_local_5(page):
             dump2 = sys_io_File.append("./dump.json")
             haxe_Log.trace("Adding tree",_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 89, 'className': "MainSuite", 'methodName': "test_dump"}))
-            dump2.writeString((HxOverrides.stringOrNull(haxe_format_JsonPrinter.print(page.records,None,None)) + HxOverrides.stringOrNull((("," if ((page.number.value != ((book.get_pages() - 1)))) else "")))))
+            dump2.writeString((HxOverrides.stringOrNull(haxe_format_JsonPrinter.print(page.records,None,None)) + HxOverrides.stringOrNull((("," if ((page.number != ((book.get_pages() - 1)))) else "")))))
             dump2.flush()
             dump2.close()
             return tink_core__Future_SyncFuture(tink_core__Lazy_LazyConst(tink_core_Outcome.Success(haxe_ds_Option._hx_None)))
@@ -2111,10 +2111,10 @@ class MainSuite:
             nonlocal hits
             nonlocal total
             nonlocal total
-            haxe_Log.trace(((("" + Std.string(count)) + ", ") + Std.string(hits)),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 160, 'className': "MainSuite", 'methodName': "test_count"}))
+            haxe_Log.trace(((("" + Std.string(count)) + ", ") + Std.string(hits)),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 161, 'className': "MainSuite", 'methodName': "test_count"}))
             if (hits == limit):
                 total = (total + count)
-                haxe_Log.trace(("TOTAL: " + Std.string(total)),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 163, 'className': "MainSuite", 'methodName': "test_count"}))
+                haxe_Log.trace(("TOTAL: " + Std.string(total)),_hx_AnonObject({'fileName': "src/RunTests.hx", 'lineNumber': 164, 'className': "MainSuite", 'methodName': "test_count"}))
                 tink_core__Callback_CallbackList_Impl_.invoke(asserts.trigger.handlers,tink_streams_Yield.End)
             hits = (hits + 1)
             total = (total + count)
@@ -11829,37 +11829,17 @@ class tink_unit_TestSuiteBuilder0(tink_unit_TestSuiteBase):
 
 
     def __init__(self,target,name = None):
-        pos = _hx_AnonObject({'lineNumber': 112, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})
+        pos = _hx_AnonObject({'lineNumber': 77, 'fileName': "src/RunTests.hx", 'methodName': "test_dump", 'className': "MainSuite"})
         def _hx_local_0():
             this1 = tink_unit__AssertionBuffer_Impl()
-            return target.test_download(10,this1)
-        tmp = tink_unit_TestCase(_hx_AnonObject({'name': "test_download", 'description': "10", 'pos': _hx_AnonObject({'lineNumber': 112, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})}),_hx_local_0,20000,False,False,pos)
-        pos1 = _hx_AnonObject({'lineNumber': 113, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})
+            return target.test_dump(this1)
+        tmp = tink_unit_TestCase(_hx_AnonObject({'name': "test_dump", 'description': None, 'pos': _hx_AnonObject({'lineNumber': 77, 'fileName': "src/RunTests.hx", 'methodName': "test_dump", 'className': "MainSuite"})}),_hx_local_0,20000,False,False,pos)
+        pos1 = _hx_AnonObject({'lineNumber': 153, 'fileName': "src/RunTests.hx", 'methodName': "test_count", 'className': "MainSuite"})
         def _hx_local_1():
             this2 = tink_unit__AssertionBuffer_Impl()
-            return target.test_download(100,this2)
-        tmp1 = tink_unit_TestCase(_hx_AnonObject({'name': "test_download", 'description': "100", 'pos': _hx_AnonObject({'lineNumber': 113, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})}),_hx_local_1,20000,False,False,pos1)
-        pos2 = _hx_AnonObject({'lineNumber': 114, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})
-        def _hx_local_2():
-            this3 = tink_unit__AssertionBuffer_Impl()
-            return target.test_download(500,this3)
-        tmp2 = tink_unit_TestCase(_hx_AnonObject({'name': "test_download", 'description': "500", 'pos': _hx_AnonObject({'lineNumber': 114, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})}),_hx_local_2,20000,False,False,pos2)
-        pos3 = _hx_AnonObject({'lineNumber': 115, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})
-        def _hx_local_3():
-            this4 = tink_unit__AssertionBuffer_Impl()
-            return target.test_download(1000,this4)
-        tmp3 = tink_unit_TestCase(_hx_AnonObject({'name': "test_download", 'description': "1000", 'pos': _hx_AnonObject({'lineNumber': 115, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})}),_hx_local_3,20000,False,False,pos3)
-        pos4 = _hx_AnonObject({'lineNumber': 116, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})
-        def _hx_local_4():
-            this5 = tink_unit__AssertionBuffer_Impl()
-            return target.test_download(5000,this5)
-        tmp4 = tink_unit_TestCase(_hx_AnonObject({'name': "test_download", 'description': "5000", 'pos': _hx_AnonObject({'lineNumber': 116, 'fileName': "src/RunTests.hx", 'methodName': "test_download", 'className': "MainSuite"})}),_hx_local_4,20000,False,False,pos4)
-        pos5 = _hx_AnonObject({'lineNumber': 152, 'fileName': "src/RunTests.hx", 'methodName': "test_count", 'className': "MainSuite"})
-        def _hx_local_5():
-            this6 = tink_unit__AssertionBuffer_Impl()
-            return target.test_count(this6)
-        tmp5 = tink_unit_TestCase(_hx_AnonObject({'name': "test_count", 'description': None, 'pos': _hx_AnonObject({'lineNumber': 152, 'fileName': "src/RunTests.hx", 'methodName': "test_count", 'className': "MainSuite"})}),_hx_local_5,20000,False,False,pos5)
-        super().__init__(_hx_AnonObject({'name': ("MainSuite" if ((name is None)) else name), 'pos': _hx_AnonObject({'lineNumber': 27, 'fileName': "src/RunTests.hx", 'methodName': None, 'className': "MainSuite"})}),[tmp, tmp1, tmp2, tmp3, tmp4, tmp5],_hx_AnonObject({'fileName': "tink/unit/TestBuilder.hx", 'lineNumber': 129, 'className': "tink.unit.TestSuiteBuilder0", 'methodName': "new"}))
+            return target.test_count(this2)
+        tmp1 = tink_unit_TestCase(_hx_AnonObject({'name': "test_count", 'description': None, 'pos': _hx_AnonObject({'lineNumber': 153, 'fileName': "src/RunTests.hx", 'methodName': "test_count", 'className': "MainSuite"})}),_hx_local_1,20000,False,False,pos1)
+        super().__init__(_hx_AnonObject({'name': ("MainSuite" if ((name is None)) else name), 'pos': _hx_AnonObject({'lineNumber': 27, 'fileName': "src/RunTests.hx", 'methodName': None, 'className': "MainSuite"})}),[tmp, tmp1],_hx_AnonObject({'fileName': "tink/unit/TestBuilder.hx", 'lineNumber': 129, 'className': "tink.unit.TestSuiteBuilder0", 'methodName': "new"}))
         self.target = target
 
     def setup(self):

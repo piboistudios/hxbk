@@ -73,10 +73,10 @@ class MainSuite {
 		});
 		return asserts;
 	}
-	@:exclude
+	// @:exclude
 	public function test_dump() {
-		Engine.start({path: 'test'});
-		var book = Book.open('test');
+		Engine.start({path: 'http'});
+		var book = Book.open('random');
 		var dump = File.write('./dump.json');
 		dump.writeString('[');
 		trace('Opening');
@@ -87,7 +87,8 @@ class MainSuite {
 		}), page -> {
 			var dump = File.append('./dump.json');
 			trace('Adding tree');
-			dump.writeString(haxe.Json.stringify(page.records) + (page.number.value != book.pages - 1 ? ',' : ''));
+			
+			dump.writeString(haxe.Json.stringify(page.records) + (page.number != book.pages - 1 ? ',' : ''));
 			dump.flush();
 			dump.close();
 			if (false)
@@ -108,7 +109,7 @@ class MainSuite {
 	}
 	// @:exclude
 	
-	// @:exclude
+	@:exclude
 	@:variant(10)
 	@:variant(100)
 	@:variant(500)
